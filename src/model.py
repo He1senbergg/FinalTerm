@@ -40,7 +40,6 @@ class vit_b16_expand_model(nn.Module):
         x = self.vit(x)
         return x
 
-# 加载预训练的VGG11模型
 class VGG_11(nn.Module):
     def __init__(self, pthpath: str = None, scratch: bool = False):
         super(VGG_11, self).__init__()  # 正确调用父类的构造函数
