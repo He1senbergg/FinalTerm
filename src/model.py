@@ -60,7 +60,7 @@ class VGG_11(nn.Module):
         x = self.vgg11(x)  # 使用vgg11进行前向传播
         return x
 
-def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoader, 
+def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoader, 
                 criterion: nn.Module, optimizer: Optimizer, num_epochs: int = 70, 
                 logdir: str ='/mnt/ly/models/FinalTerm/mission2/tensorboard/1',
                 save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
@@ -71,7 +71,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoad
 
     writer = SummaryWriter(log_dir=logdir)
 
-    best_val_acc = 0.0
+    best_test_acc = 0.0
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
@@ -128,37 +128,37 @@ def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoad
 
         # 验证步骤
         model.eval()
-        val_loss = 0.0
+        test_loss = 0.0
         corrects = 0
 
         # 开始验证计时
-        val_start_time = time.time()
+        test_start_time = time.time()
 
         with torch.no_grad():
-            for inputs, labels in val_loader:
+            for inputs, labels in test_loader:
                 inputs, labels = inputs.to(device), labels.to(device)
                 outputs = model(inputs)
                 loss = criterion(outputs, labels)
-                val_loss += loss.item() * inputs.size(0)
+                test_loss += loss.item() * inputs.size(0)
                 _, preds = torch.max(outputs, 1)
                 corrects += torch.sum(preds == labels.data)
 
-        val_end_time = time.time()
-        val_elapsed_time = val_end_time - val_start_time
+        test_end_time = time.time()
+        test_elapsed_time = test_end_time - test_start_time
 
-        val_loss = val_loss / len(val_loader.dataset)
-        val_acc = corrects.double() / len(val_loader.dataset)
-        print(f'Test Loss: {val_loss:.4f}, Test Accuracy: {val_acc:.4f}, Test Time: {val_elapsed_time:.2f}s')
+        test_loss = test_loss / len(test_loader.dataset)
+        test_acc = corrects.double() / len(test_loader.dataset)
+        print(f'Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}, Test Time: {test_elapsed_time:.2f}s')
 
         # 将验证loss和accuracy写入TensorBoard
-        writer.add_scalar('Loss/Test Loss', val_loss, epoch)
-        writer.add_scalar('Accuracy/Test Accuracy', val_acc, epoch)
-        writer.add_scalar('Time/Test', val_elapsed_time, epoch)
+        writer.add_scalar('Loss/Test Loss', test_loss, epoch)
+        writer.add_scalar('Accuracy/Test Accuracy', test_acc, epoch)
+        writer.add_scalar('Time/Test', test_elapsed_time, epoch)
 
         # 保存最佳模型
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
-            file_path = f"{epoch+1}_{best_val_acc}.pth"
+        if test_acc > best_test_acc:
+            best_test_acc = test_acc
+            file_path = f"{epoch+1}_{best_test_acc}.pth"
             torch.save(model.state_dict(), os.path.join(save_dir, file_path))
     
     writer.flush()
