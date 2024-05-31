@@ -1,4 +1,4 @@
-# FinalTerm-Part2
+# FinalTerm-Part2（初稿Markdown, 2024/06/01 00: 19）
 
 ## Ⅰ. 准备步骤
 **1. 代码下载**
@@ -28,24 +28,6 @@ cd 四个文件摆放的同级目录位置
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
 | `--model`   | str    | 'vgg'                                          | Model to train (VGG11 or ViT).                     |
 | `--scratch` | bool   | False                                          | Train the model from scratch.                      |
-
-| 参数名 | 类型 | 默认值 | 描述 |
-| ------- | ------- | ------- | ------- |
-| `--num_classes` | int | 200 | Number of classes in the dataset. |
-| `--data_dir` | str | /mnt/ly/models/deep_learning/mid_term/data/CUB_200_2011 | Path to the CUB-200-2011 dataset directory. |
-| `--batch_size` | int | 32 | Batch size for training. |
-| `--num_epochs` | int | 70 | Number of epochs for training. |
-| `--learning_rate` | float | 0.001 | Learning rate for the optimizer. |
-| `--momentum` | float | 0.9 | Momentum for the SGD optimizer. |
-| `--weights` | str | IMAGENET1K_V1 | Pytorch中的ResNet预训练权重名称 |
-| `--model_path` | str | None | 读取本地pth |
-| `--optimizer` | str | SGD | Optimizer to use (SGD or Adam). |
-| `--logdir` | str | /mnt/ly/models/deep_learning/mid_term/tensorboard/1 | Directory to save TensorBoard logs. |
-| `--save_dir` | str | /mnt/ly/models/deep_learning/mid_term/model | 训练时保存pth的位置 |
-| `--scratch` | bool | False | 是否随机初始化 |
-| `--decay` | float | 1e-3 | Weight decay for the optimizer. |
-| `--milestones` | list | None | List of epochs to decrease the learning rate. |
-| `--gamma` | float | 0.1 | 当使用milestones时，每次学习率的缩放率 |
 
 **3. 必须自适应调整的参数**
 
