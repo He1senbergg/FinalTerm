@@ -37,16 +37,51 @@ def main():
     decay = args.decay
     milestones = args.milestones
     gamma = args.gamma
-    model = args.model
+    model_choice = args.model
     scratch = args.scratch
     optimizer= args.optimizer
 
     if optimizer == "SGD" and milestones is None:
         milestones = [int(num_epochs * 0.5), int(num_epochs * 0.75)]
 
+    if milestones:
+        for milestone in milestones:
+            if milestone > num_epochs:
+                raise ValueError("Milestone epoch cannot be greater than the total number of epochs.")
+            
+    train_loader, test_loader = get_loaders(batch_size=batch_size, data_dir=data_dir)
+
+    criterion = nn.CrossEntropyLoss()
+    
+    model = None
+    if model_choice == "vgg":
+        if scratch or pthpath:
+            model = VGG_11(pthpath=pthpath) if pthpath else VGG_11(scratch=True)
+            parameters = [{"params": model.vgg11.parameters(), "lr": learning_rate}]
+        else:
+            model = VGG_11()
+            parameters = [
+                {"params": model.vgg11.classifier[-1].parameters(), "lr": learning_rate},  # 最后一个线性层
+                {"params": [param for name, param in model.vgg11.named_parameters() if not name.startswith("classifier.6")], "lr": learning_rate * 0.1}  # 其余层，确保不包括最后一层
+            ]       
+    elif model_choice == "vit":
+        if scratch or pthpath:
+            model = vit_b16_expand_model(pthpath=pthpath) if pthpath else vit_b16_expand_model(scratch=True)
+            parameters = [{"params": model.vit.parameters(), "lr": learning_rate}]
+        else:
+            model = vit_b16_expand_model()
+            # 检索复制层的参数
+            copied_layer_indices = [i for i in range(len(model.vit.encoder.layers) - 6, len(model.vit.encoder.layers))]
+            parameters = [
+                {"params": model.vit.heads.head.parameters(), "lr": learning_rate},  # 最后一个线性层
+                {"params": [param for name, param in model.vit.named_parameters() if any(f"encoder.layers.{i}" in name for i in copied_layer_indices)], "lr": learning_rate},  # 复制的encoder层
+                {"params": [param for name, param in model.vit.named_parameters() if "heads.head" not in name and all(f"encoder.layers.{i}" not in name for i in copied_layer_indices)], "lr": learning_rate * 0.1}  # 其余层
+            ]
+    else:
+        raise ValueError("Model must be either 'vgg' or 'vit'.")
+
     # 构造目录名称
-    directory_name = f"{try_times}_{model}_{optimizer}_{momentum}_{decay}_{learning_rate}_\
-        {num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"
+    directory_name = f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"
     
     # 设置 save_dir 和 logdir
     save_dir = os.path.join(base_dir, "modelpth", directory_name)
@@ -62,45 +97,6 @@ def main():
             "如仍需尝试该配置，请将上一次运行的保存文件夹进行重命名（如末尾加上'_0'）"
             "或者删除该文件夹（请确保是不需要了再删除）。"
         )
-
-    if milestones:
-        for milestone in milestones:
-            if milestone > num_epochs:
-                raise ValueError("Milestone epoch cannot be greater than the total number of epochs.")
-            
-    train_loader, test_loader = get_loaders(batch_size=batch_size, data_dir=data_dir)
-
-    criterion = nn.CrossEntropyLoss()
-  
-    if model == "vgg":
-        if scratch or pthpath:
-            if pthpath:
-                model = VGG_11(pthpath=pthpath)
-            else:
-                model = VGG_11()
-            parameters = [{"params": model.vgg11.parameters(), "lr": learning_rate}]
-        else:
-            parameters = [
-                {"params": model.vgg11.classifier[-1].parameters(), "lr": learning_rate},  # 最后一个线性层
-                {"params": [param for name, param in model.vgg11.named_parameters() if not name.startswith("classifier.6")], "lr": learning_rate * 0.1}  # 其余层，确保不包括最后一层
-            ]       
-    elif model == "vit":
-        if scratch or pthpath:
-            if pthpath:
-                model = vit_b16_expand_model(pthpath=pthpath)
-            else:
-                model = vit_b16_expand_model()
-            parameters = [{"params": model.vit.parameters(), "lr": learning_rate}]
-        else:
-            # 检索复制层的参数
-            copied_layer_indices = [i for i in range(len(model.vit.encoder.layers) - 6, len(model.vit.encoder.layers))]
-            parameters = [
-                {"params": model.vit.heads.head.parameters(), "lr": learning_rate},  # 最后一个线性层
-                {"params": [param for name, param in model.vit.named_parameters() if any(f"encoder.layers.{i}" in name for i in copied_layer_indices)], "lr": learning_rate},  # 复制的encoder层
-                {"params": [param for name, param in model.vit.named_parameters() if "heads.head" not in name and all(f"encoder.layers.{i}" not in name for i in copied_layer_indices)], "lr": learning_rate * 0.1}  # 其余层
-            ]
-    else:
-        raise ValueError("Model must be either 'vgg' or 'vit'.")
 
     # 根据命令行参数选择优化器
     if optimizer == 'SGD':

@@ -10,10 +10,10 @@ from torch.utils.tensorboard import SummaryWriter
 from torchvision.models import vit_b_16, vgg11, ViT_B_16_Weights, VGG11_Weights
 
 class vit_b16_expand_model(nn.Module):
-    def __init__(self, pthpath: str = None):
+    def __init__(self, pthpath: str = None, scratch: bool = False):
         super(vit_b16_expand_model, self).__init__()
 
-        if pthpath:
+        if pthpath or scratch:
             self.vit = vit_b_16(weights=None)
         else:
             # 加载预训练模型
@@ -42,9 +42,9 @@ class vit_b16_expand_model(nn.Module):
 
 # 加载预训练的VGG11模型
 class VGG_11(nn.Module):
-    def __init__(self, pthpath: str = None):
+    def __init__(self, pthpath: str = None, scratch: bool = False):
         super(VGG_11, self).__init__()  # 正确调用父类的构造函数
-        if pthpath:
+        if pthpath or scratch:
             self.vgg11 = vgg11(weights=None)
         else:
             self.vgg11 = vgg11(weights=VGG11_Weights.IMAGENET1K_V1) # 使用vgg11
