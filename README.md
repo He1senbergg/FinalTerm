@@ -1,5 +1,8 @@
 # FinalTerm-Part2（初稿Markdown, 2024/06/01 10: 47）
 
+## 链接
+[ViT](https://arxiv.org/pdf/2010.11929)、[VGG](https://arxiv.org/pdf/1409.1556)
+
 ## cutmix说明
 1. 代码实现所在具体位置
 
