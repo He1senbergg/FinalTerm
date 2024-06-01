@@ -19,12 +19,13 @@ def main():
     data_dir = args.data_dir
     pthpath = args.pthpath
     batch_size = args.batch_size
+    model = args.model
 
     train_loader, test_loader = get_loaders(batch_size, data_dir)
 
     criterion = nn.CrossEntropyLoss()
 
-    if model == "vgg":
+    if model == "vgg11":
         model = VGG_11(pthpath=pthpath) 
     elif model == "vit":
         model = vit_b16_expand_model(pthpath=pthpath)

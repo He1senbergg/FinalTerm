@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
     parser.add_argument('--milestones', type=list, default=None, help='List of epochs to decrease the learning rate.')
     parser.add_argument('--gamma', type=float, default=0.1, help='Factor to decrease the learning rate.')
-    parser.add_argument('--model', type=str, choices=['vgg', 'vit'], default='vgg', help='Model to train (VGG11 or ViT).')
+    parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], default='vgg11', help='Model to train (VGG11 or ViT).')
     parser.add_argument('--scratch', type=bool, default=False, help='Train the model from scratch.')
     return parser.parse_args()
 
@@ -54,7 +54,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     model = None
-    if model_choice == "vgg":
+    if model_choice == "vgg11":
         if scratch or pthpath:
             model = VGG_11(pthpath=pthpath) if pthpath else VGG_11(scratch=True)
             parameters = [{"params": model.vgg11.parameters(), "lr": learning_rate}]
@@ -78,7 +78,7 @@ def main():
                 {"params": [param for name, param in model.vit.named_parameters() if "heads.head" not in name and all(f"encoder.layers.{i}" not in name for i in copied_layer_indices)], "lr": learning_rate * 0.1}  # 其余层
             ]
     else:
-        raise ValueError("Model must be either 'vgg' or 'vit'.")
+        raise ValueError("Model must be either 'vgg11' or 'vit'.")
 
     # 构造目录名称
     directory_name = f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"
@@ -104,7 +104,7 @@ def main():
     elif optimizer == 'Adam':
         optimizer = torch.optim.Adam(parameters, weight_decay=decay)
 
-    train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, milestones, gamma)
+    train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, model_choice, milestones, gamma)
 
 if __name__ == '__main__':
     main()

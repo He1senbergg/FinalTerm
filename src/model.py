@@ -3,6 +3,7 @@ import time
 import torch
 import torch.nn as nn
 from copy import deepcopy
+from collections import deque
 from dataloader import cutmix
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
@@ -34,13 +35,12 @@ class vit_b16_expand_model(nn.Module):
 
         if pthpath:
             checkpoint = torch.load(pthpath)
-            self.vit.load_state_dict(checkpoint) 
+            self.vit.load_state_dict(checkpoint)
 
     def forward(self, x):
         x = self.vit(x)
         return x
 
-# 加载预训练的VGG11模型
 class VGG_11(nn.Module):
     def __init__(self, pthpath: str = None, scratch: bool = False):
         super(VGG_11, self).__init__()  # 正确调用父类的构造函数
@@ -64,7 +64,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
                 criterion: nn.Module, optimizer: Optimizer, num_epochs: int = 70, 
                 logdir: str ='/mnt/ly/models/FinalTerm/mission2/tensorboard/1',
                 save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
-                milestones: list = None, gamma: float = 0.1):
+                chioce: str = "vgg11", milestones: list = None, gamma: float = 0.1):
     
     device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -72,6 +72,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
     writer = SummaryWriter(log_dir=logdir)
 
     best_test_acc = 0.0
+    best_test_files = deque()
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
@@ -111,8 +112,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
         # 结束训练计时
         train_end_time = time.time()
         train_elapsed_time = train_end_time - train_start_time
-        print(f'Epoch {epoch+1}/{num_epochs}, \nTrain Loss: {epoch_loss:.4f}, \
-              Data Transform Time: {data_transform_time: .2f}s, Training Time: {train_elapsed_time:.2f}s')
+        print(f'Epoch {epoch+1}/{num_epochs}, \nTrain Loss: {epoch_loss:.4f}, Data Transform Time: {data_transform_time: .2f}s, Training Time: {train_elapsed_time:.2f}s')
 
         # 将训练loss写入TensorBoard
         writer.add_scalar('Loss/Train Loss', epoch_loss, epoch)
@@ -159,7 +159,12 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
         if test_acc > best_test_acc:
             best_test_acc = test_acc
             file_path = f"{epoch+1}_{best_test_acc}.pth"
-            torch.save(model.state_dict(), os.path.join(save_dir, file_path))
+            sub_model = getattr(model, chioce)  # 这会获取 model.vgg11 或 model.vit
+            torch.save(sub_model.state_dict(), os.path.join(save_dir, file_path))
+            best_test_files.append(file_path)
+            if len(best_test_files) > 10:
+                file_to_remove = best_test_files.popleft()
+                os.remove(os.path.join(save_dir, file_to_remove))
     
     writer.flush()
     writer.close()
