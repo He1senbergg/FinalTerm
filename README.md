@@ -1,6 +1,6 @@
-# FinalTerm-Part2（初稿Markdown, 2024/06/01 10: 47）
+# FinalTerm-Part2（初稿Markdown, 2024/06/01 11: 04）
 
-## 链接
+## 模型论文链接
 [ViT](https://arxiv.org/pdf/2010.11929)、[VGG](https://arxiv.org/pdf/1409.1556)
 
 ## cutmix说明
