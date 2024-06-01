@@ -1,6 +1,6 @@
 # FinalTerm-Part2（初稿Markdown, 2024/06/01 11: 04）
 
-## 模型论文链接
+## 采用的预训练模型的原始论文链接
 [ViT](https://arxiv.org/pdf/2010.11929)、[VGG](https://arxiv.org/pdf/1409.1556)
 
 ## cutmix说明
@@ -42,7 +42,7 @@ cd 四个文件摆放的同级目录位置
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
 | `--milestones` | list | None                                          | List of epochs to decrease the learning rate.      |
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
-| `--model`   | str    | 'vgg'                                          | Model to train (VGG11 or ViT).                     |
+| `--model`   | str    | 'vgg11'                                          | Model to train ("vgg11" or "vit").                     |
 | `--scratch` | bool   | False                                          | Train the model from scratch.                      |
 
 **3. 必须自适应调整的参数**
