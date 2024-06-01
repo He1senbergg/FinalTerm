@@ -1,4 +1,15 @@
-# FinalTerm-Part2（初稿Markdown, 2024/06/01 00: 19）
+# FinalTerm-Part2（初稿Markdown, 2024/06/01 10: 47）
+
+## cutmix说明
+1. 代码实现所在具体位置
+
+/src/dataloader.py
+![image](https://github.com/He1senbergg/FinalTerm-Part2/assets/148076707/4b33d7de-fae2-475e-9e0e-e4bfb84281a7)
+
+2. 训练中调用的位置
+
+/src/model.py
+![image](https://github.com/He1senbergg/FinalTerm-Part2/assets/148076707/641b16cf-29fc-4fa9-91e2-c4656108f5a5)
 
 ## Ⅰ. 准备步骤
 **1. 代码下载**
