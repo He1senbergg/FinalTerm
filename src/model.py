@@ -110,8 +110,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
         # 结束训练计时
         train_end_time = time.time()
         train_elapsed_time = train_end_time - train_start_time
-        print(f'Epoch {epoch+1}/{num_epochs}, \nTrain Loss: {epoch_loss:.4f}, \
-              Data Transform Time: {data_transform_time: .2f}s, Training Time: {train_elapsed_time:.2f}s')
+        print(f'Epoch {epoch+1}/{num_epochs}, \nTrain Loss: {epoch_loss:.4f}, Data Transform Time: {data_transform_time: .2f}s, Training Time: {train_elapsed_time:.2f}s')
 
         # 将训练loss写入TensorBoard
         writer.add_scalar('Loss/Train Loss', epoch_loss, epoch)
