@@ -64,7 +64,7 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
                 criterion: nn.Module, optimizer: Optimizer, num_epochs: int = 70, 
                 logdir: str ='/mnt/ly/models/FinalTerm/mission2/tensorboard/1',
                 save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
-                chioce: str = "vgg11", milestones: list = None, gamma: float = 0.1):
+                chioce: str = "vgg11", milestones: list = [], gamma: float = 0.1):
     
     device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     model.to(device)

@@ -17,7 +17,7 @@ def parse_args():
     parser.add_argument('--optimizer', type=str, choices=['SGD', 'Adam'], default='SGD', help='Optimizer to use (SGD or Adam).')
     parser.add_argument('--base_dir', type=str, required=True, help='Base directory for saving model and logs.')
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
-    parser.add_argument('--milestones', type=list, default=None, help='List of epochs to decrease the learning rate.')
+    parser.add_argument('--milestones', type=list, default=[], help='List of epochs to decrease the learning rate.')
     parser.add_argument('--gamma', type=float, default=0.1, help='Factor to decrease the learning rate.')
     parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], default='vgg11', help='Model to train (VGG11 or ViT).')
     parser.add_argument('--scratch', type=bool, default=False, help='Train the model from scratch.')
@@ -41,7 +41,7 @@ def main():
     scratch = args.scratch
     optimizer= args.optimizer
 
-    if optimizer == "SGD" and milestones is None:
+    if optimizer == "SGD" and len(milestones) == 0:
         milestones = [int(num_epochs * 0.5), int(num_epochs * 0.75)]
 
     if milestones:
