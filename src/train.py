@@ -102,7 +102,7 @@ def main():
     if optimizer == 'SGD':
         optimizer = torch.optim.SGD(parameters, momentum=momentum, weight_decay=decay)
     elif optimizer == 'Adam':
-        optimizer = torch.optim.Adam(parameters, weight_decay=decay)
+        optimizer = torch.optim.Adam(parameters, weight_decay=decay, eps=1e-3)
 
     train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, model_choice, milestones, gamma)
 

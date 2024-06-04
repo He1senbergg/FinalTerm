@@ -96,6 +96,18 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
             outputs = model(inputs)
             loss = criterion(outputs, labels1) * lam + criterion(outputs, labels2) * (1. - lam)
             loss.backward()
+
+            # # --------------------------测试-------------------------
+            # # 梯度剪裁
+            # nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            
+            # # 在优化器步骤之前添加梯度监控代码
+            # max_grad = max(p.grad.abs().max() for p in model.parameters() if p.grad is not None)
+            # min_grad = min(p.grad.abs().min() for p in model.parameters() if p.grad is not None)
+            # print(f"Max grad: {max_grad}, Min grad: {min_grad}")
+
+            # # --------------------------测试-------------------------
+
             optimizer.step()
             running_loss += loss.item() * inputs.size(0)
 
