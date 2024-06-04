@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate for the optimizer.')
     parser.add_argument('--momentum', type=float, default=0.9, help='Momentum for the SGD optimizer.')
     parser.add_argument('--pthpath', type=str, default=None, help='Path to a saved model checkpoint to continue training.')
-    parser.add_argument('--optimizer', type=str, choices=['SGD', 'Adam'], default='SGD', help='Optimizer to use (SGD or Adam).')
+    parser.add_argument('--optimizer', type=str, choices=['SGD', 'Adam', "AdamW"], default='SGD', help='Optimizer to use (SGD or Adam).')
     parser.add_argument('--base_dir', type=str, required=True, help='Base directory for saving model and logs.')
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
     parser.add_argument('--milestones', type=list, default=[], help='List of epochs to decrease the learning rate.')
@@ -102,7 +102,15 @@ def main():
     if optimizer == 'SGD':
         optimizer = torch.optim.SGD(parameters, momentum=momentum, weight_decay=decay)
     elif optimizer == 'Adam':
-        optimizer = torch.optim.Adam(parameters, weight_decay=decay, eps=1e-3)
+        eps = 1e-8 if model_choice == 'vgg11' else 1e-5
+        optimizer = torch.optim.Adam(parameters, weight_decay=decay, eps=eps)
+        # 测试1e-8&Adam&ViT会nan
+        # 测试1e-6&Adam&ViT会nan
+        # 测试1e-5&Adam&ViT会nan
+        # 测试1e-3&Adam&ViT不会nan，但会效果很差，越练越坏
+    elif optimizer == 'AdamW':
+        # eps = 1e-8 if model_choice == 'vgg11' else 1e-5
+        optimizer = torch.optim.AdamW(parameters, weight_decay=decay, eps=1e-8)
 
     train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, model_choice, milestones, gamma)
 
