@@ -41,8 +41,11 @@ def main():
     scratch = args.scratch
     optimizer= args.optimizer
 
-    if optimizer == "SGD" and len(milestones) == 0:
-        milestones = [int(num_epochs * 0.5), int(num_epochs * 0.75)]
+    if optimizer == "SGD":
+        if len(milestones) == 0:
+            milestones = [int(num_epochs * 0.5), int(num_epochs * 0.75)]
+        else:
+            milestones = [int(x) for x in "".join(milestones[1:-1]).split(',')]
 
     if milestones:
         for milestone in milestones:
