@@ -25,6 +25,8 @@ def load_model(self_supervised=False, projection_dim=128, pretrained=False,
         # 冻结模型所有参数，只训练最后一层分类层
         # 冻结参数在train.py中实现
         if linear_protocal:
+            if not pthpath:
+                raise ValueError('Please provide the path to the checkpoint.')
             model.load_state_dict(torch.load(pthpath))
             model.fc = nn.Linear(in_features, 100)
     # 使用ImageNet预训练模型进行相同的Linear Protocol
