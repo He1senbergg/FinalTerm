@@ -90,7 +90,7 @@ wget
 
 模型权重2: 在pre-trained的ViT基础上微调得到的结果。
 ```
-wget 
+wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=pjckvuv6kwg2clhuh10t60gvj&st=whxrahg8&dl=1
 ```
 
 ## Ⅱ. 训练
