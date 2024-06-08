@@ -105,8 +105,9 @@ def main():
     if optimizer == 'SGD':
         optimizer = torch.optim.SGD(parameters, momentum=momentum, weight_decay=decay)
     elif optimizer == 'Adam':
-        eps = 1e-8 if model_choice == 'vgg11' else 1e-5
-        optimizer = torch.optim.Adam(parameters, weight_decay=decay, eps=eps)
+        # eps参数是为了防止分母为0出现nan，eps的默认值是1e-8
+        # eps = 1e-8 if model_choice == 'vgg11' else 1e-3
+        optimizer = torch.optim.Adam(parameters, weight_decay=decay, eps=1e-8)
         # 测试1e-8&Adam&ViT会nan
         # 测试1e-6&Adam&ViT会nan
         # 测试1e-5&Adam&ViT会nan

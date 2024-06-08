@@ -10,7 +10,7 @@ def parse_args():
     parser.add_argument('--data_dir', type=str, default=r'/mnt/ly/models/FinalTerm/mission2/data', help='Path to the CIFAR100 dataset directory.')
     parser.add_argument('--pthpath', type=str, required=True, help='Path to a saved model checkpoint to continue training.')
     parser.add_argument('--batch_size', type=int, required=True, help='The batch_size used during training.')
-    parser.add_argument('--model', type=str, required=True, help='The model to use for training (VGG11 or ViT).')
+    parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], required=True, help='The model to use for training (VGG11 or ViT).')
     return parser.parse_args()
 
 def main():
