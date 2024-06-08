@@ -97,19 +97,23 @@ wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=p
 
 命令行运行代码
 
-- 示例1（请注意修改以下的信息的绝对位置）：使用预训练模型与默认参数进行训练
+- 示例1（请注意修改以下的信息的绝对位置）：使用预训练vgg11模型与默认参数进行训练
   ```
   python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10
   ```
-- 示例2（请注意修改以下的信息的绝对位置）：使用预训练模型、Adam与其他默认参数开始训练
+- 示例2（请注意修改以下的信息的绝对位置）：使用预训练vit模型与默认参数进行训练
+  ```
+  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10 --model vit
+  ```
+- 示例3（请注意修改以下的信息的绝对位置）：使用预训练模型、Adam与其他默认参数开始训练
   ```
   python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam --trytime 2 --num_epochs 10
   ```
-- 示例3（请注意修改以下的信息的绝对位置）：使用随机初始化与其他默认参数开始训练
+- 示例4（请注意修改以下的信息的绝对位置）：使用随机初始化与其他默认参数开始训练
   ```
   python train.py --data_dir /mission2/data --base_dir /mission2--scratch True --trytime 3 --num_epochs 10
   ```
-- 示例4（请注意修改以下的信息的绝对位置）：使用本地模型pth与其他默认参数开始训练
+- 示例5（请注意修改以下的信息的绝对位置）：使用本地模型pth与其他默认参数开始训练
   ```
   python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth --trytime 4 --num_epochs 10
   ```
