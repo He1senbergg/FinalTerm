@@ -1,5 +1,11 @@
 import os
 import shutil
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Process the Tiny ImageNet.")
+    parser.add_argument('--data_dir', type=str, required=True, help='Path to the dataset directory.')
+    return parser.parse_args()
 
 def reorganize_images(base_dir):
     # 遍历base_dir下的所有类别文件夹
@@ -28,6 +34,9 @@ def reorganize_images(base_dir):
         else:
             print(f"{class_dir_path} is not a directory")
 
-# 设置你的数据目录
-base_directory = "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200/train"
-reorganize_images(base_directory)
+def main():
+    args = parse_args()
+    base_directory = args.data_dir
+    reorganize_images(base_directory)
+if __name__ == "__main__":
+    main()
