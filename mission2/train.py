@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
     parser.add_argument('--milestones', type=list, default=[], help='List of epochs to decrease the learning rate.')
     parser.add_argument('--gamma', type=float, default=0.1, help='Factor to decrease the learning rate.')
-    parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], default='vgg11', help='Model to train (VGG11 or ViT).')
+    parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], default='vgg11', help='Model to train (VGG11 or ViT or AdamW).')
     parser.add_argument('--scratch', type=bool, default=False, help='Train the model from scratch.')
     return parser.parse_args()
 
@@ -47,7 +47,7 @@ def main():
         else:
             milestones = [int(x) for x in "".join(milestones[1:-1]).split(',')]
 
-    if milestones:
+    if len(milestones) > 0:
         for milestone in milestones:
             if milestone > num_epochs:
                 raise ValueError("Milestone epoch cannot be greater than the total number of epochs.")
