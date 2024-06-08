@@ -98,29 +98,29 @@ wget
 
 - 示例1（请注意修改以下的信息的绝对位置）：使用预训练模型与默认参数进行训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2
+  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10
   ```
 - 示例2（请注意修改以下的信息的绝对位置）：使用预训练模型、Adam与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam
+  python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam --trytime 2 --num_epochs 10
   ```
 - 示例3（请注意修改以下的信息的绝对位置）：使用随机初始化与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2--scratch True
+  python train.py --data_dir /mission2/data --base_dir /mission2--scratch True --trytime 3 --num_epochs 10
   ```
 - 示例4（请注意修改以下的信息的绝对位置）：使用本地模型pth与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth
+  python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth --trytime 4 --num_epochs 10
   ```
 
 ## Ⅲ. 测试
 
-测试的效果为：输出如下信息
+测试的效果为输出如下信息：
 ```python
 print(f'Val Loss: {val_loss:.4f}, Val Accuracy: {val_acc:.4f}, Val Time: {val_elapsed_time:.2f}s')
 ```
 
-测试时，需要提供两个参数'--data_dir'、'--pthpath'、'--batch_size'、'--model'。
+测试时，必须提供四个参数'--data_dir'、'--pthpath'、'--batch_size'、'--model'。
 
 命令行运行代码，示例如下（请注意修改以下的信息的绝对位置）：
 ```
