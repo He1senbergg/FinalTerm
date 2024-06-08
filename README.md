@@ -27,7 +27,22 @@
 cd 四个文件摆放的同级目录位置
 ```
 
-**2. 可调参数概述**
+**2. 数据集准备**
+下载Tiny ImageNet
+
+命令行运行代码（请注意修改以下的信息的绝对位置）
+```
+wget http://cs231n.stanford.edu/tiny-imagenet-200.zip -P /path/to/your/directory
+```
+
+运行`data_process.py`，将数据处理为我的代码中，自监督学习所需的数据形式。
+
+命令行运行代码（请注意修改以下的信息的绝对位置）
+```
+python data_process.py --data_dir /path/to/your/directory
+```
+
+**3. 可调参数概述**
 | 参数名        | 类型    | 默认值                                         | 描述                                               |
 |-------------|---------|-----------------------------------------------|----------------------------------------------------|
 | `--trytime` | int     | (**必须指定**)                                     | 运行轮次序号         |
@@ -44,7 +59,7 @@ cd 四个文件摆放的同级目录位置
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
 | `--strategy`   | str    | (**必须指定，全小写缩写**)                 | Strategy for training.  |
 
-**3. 必须自适应调整的参数**
+**4. 必须自适应调整的参数**
 
 `--try_times`: 运行轮次序号。
 
@@ -68,7 +83,7 @@ cd 四个文件摆放的同级目录位置
 - "sl"：Self-supervised Linear-protocal (frozen the parameters before the FC layer)
 - "pl"：Pretrain (on ImageNet via supervised) Linear-protocal (frozen the parameters before the FC layer)
 
-**4. 下载模型权重文件**
+**5. 下载模型权重文件**
 
 模型权重1: 在ImageNet上pre-trained的ResNet-18进行线性评估训练得到的模型。
 ```
