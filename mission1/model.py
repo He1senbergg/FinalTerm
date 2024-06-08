@@ -83,7 +83,7 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
                           milestones: list = [], gamma: float = 0.1):
     
     divided = epochs // 10
-    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
     writer = SummaryWriter(log_dir=logdir)
@@ -109,7 +109,7 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
             images = torch.cat(images, dim=0).to(device)
             optimizer.zero_grad()
             features = model(images)
-            loss, exp_sim = criterion(features)
+            loss = criterion(features)
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
@@ -158,7 +158,7 @@ def supervised_train(model: nn.Module, train_loader: DataLoader, test_loader: Da
                      save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
                      milestones: list = [], gamma: float = 0.1):
     
-    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
     writer = SummaryWriter(log_dir=logdir)
