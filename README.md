@@ -48,14 +48,14 @@ cd 四个文件摆放的同级目录位置
 **2. 可调参数概述**
 | 参数名        | 类型    | 默认值                                         | 描述                                               |
 |-------------|---------|-----------------------------------------------|----------------------------------------------------|
-| `--trytime` | int     | (**必须指定**)                                     | 运行轮次计数         |
+| `--trytime` | int     | (**必须指定**)                                     | 运行轮次序号         |
 | `--data_dir`| str     | '/mnt/ly/models/FinalTerm/mission2/data'       | Path to the CIFAR100 dataset directory.            |
 | `--batch_size` | int  | 64                                             | Batch size for training.                           |
 | `--num_epochs` | int  | 70                                             | 训练轮次设定                     |
 | `--lr`      | float   | 0.001                                          | Learning rate for the optimizer.                   |
 | `--momentum`| float   | 0.9                                            | Momentum for the SGD optimizer.                    |
 | `--pthpath`| str     | None                                           | Path to a saved model checkpoint to continue training. |
-| `--optimizer` | str  | 'SGD'                                          | Optimizer to use (SGD or Adam or AdamW).**大小写敏感**                   |
+| `--optimizer` | str  | 'SGD'(**大小写敏感**)                     | Optimizer to use (SGD or Adam or AdamW).                   |
 | `--base_dir` | str   | (**必须指定**)                                     | Base directory for saving model and logs.          |
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
 | `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
@@ -65,16 +65,20 @@ cd 四个文件摆放的同级目录位置
 
 **3. 必须自适应调整的参数**
 
-因为代码中的默认地址信息为服务器上的地址，所以本地运行时，必须在命令行中重新赋值以修改。
+- `--try_times`: 运行轮次序号。
+
+每次运行，都需要设置try_times。目的是为了辅助文件夹进行排序，其，实为放在开头的轮次序号。该数没有过多要求，只要是int且不在同一个int使用相同的配置即可（否则会自动弹出报错）。
+
 - `--data_dir`：改为本地CIFAR100的位置（绝对位置）
+
+因为代码中的默认地址信息为服务器上的地址，所以本地运行时，必须在命令行中重新赋值以修改。
+
+- `--base_dir`：运行过程中，进行保存pathpth和log时的根目录。
 
 根目录需要自适应修改。代码实现了，会在base_dir/model/下，以各个当前运行的参数进行命名文件夹名a，随后会在base_dir/model/a/下进行pth的保存。同理会在base_dir/tensorboard/a/下进行log的保存。
 
 *注：其中文件夹名a为f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"*
-- `--base_dir`：运行过程中，进行保存pathpth和log时的根目录。
 
-需要设置try_times，为了辅助文件夹进行排序，放在开头的轮次序号。该数没有过多要求，只要是int即可。
-- `--try_times`: 运行轮次序号。
 
 **4. 下载模型权重文件**
 
