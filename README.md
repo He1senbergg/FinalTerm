@@ -50,7 +50,7 @@ cd 四个文件摆放的同级目录位置
 | 参数名        | 类型    | 默认值                                         | 描述                                               |
 |-------------|---------|-----------------------------------------------|----------------------------------------------------|
 | `--trytime` | int     | (**必须指定**)                                     | 运行轮次序号         |
-| `--data_dir`| str     | '/mnt/ly/models/FinalTerm/mission2/data'       | Path to the CIFAR100 dataset directory.            |
+| `--data_dir`| str     | 服务器上的数据集位置                        | Path to the CIFAR100 dataset directory.            |
 | `--batch_size` | int  | 64                                             | Batch size for training.                           |
 | `--num_epochs` | int  | 70                                             | 训练轮次设定                     |
 | `--lr`      | float   | 0.001                                          | Learning rate for the optimizer.                   |
