@@ -32,7 +32,8 @@
 
 /mission2/model.py
 
-![image](https://github.com/He1senbergg/FinalTerm-Part2/assets/148076707/641b16cf-29fc-4fa9-91e2-c4656108f5a5)
+![image](https://github.com/He1senbergg/FinalTerm/assets/148076707/ff4c59f4-479f-4d33-879a-335622c00f08)
+
 
 ## Ⅰ. 准备步骤
 **1. 代码下载**
