@@ -42,7 +42,7 @@ cd 四个文件摆放的同级目录位置
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
 | `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
-| `--strategy`   | str    | (**必须指定，全小写缩写**)                 | Strategy for training  |
+| `--strategy`   | str    | (**必须指定，全小写缩写**)                 | Strategy for training.  |
 
 **3. 必须自适应调整的参数**
 
