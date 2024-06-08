@@ -124,11 +124,7 @@ def main():
 
     if strategy == "ss":
         self_supervised_train(model, train_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
-    elif strategy == "sl":
-        supervised_train(model, train_loader, test_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
-    elif strategy == "s":
-        supervised_train(model, train_loader, test_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
-    elif strategy == "pl":
+    else:
         supervised_train(model, train_loader, test_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
     
 if __name__ == '__main__':
