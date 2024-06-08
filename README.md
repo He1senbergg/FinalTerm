@@ -1,24 +1,42 @@
-# FinalTerm-Part2（初稿Markdown, 2024/06/01 11: 04）
+# FinalTerm（2024/06/08 11: 00）
 
-## 采用的预训练模型的原始论文链接
-[ViT](https://arxiv.org/pdf/2010.11929)、[VGG](https://arxiv.org/pdf/1409.1556)
+# 仓库文件说明
+## mission1 对比监督学习和自监督学习在图像分类任务上的性能表现
+一共 个代码文件。
+- ``
+- ``
+- ``
+- ``
 
+## mission2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
+一共四个代码文件。
+- `dataloader.py`：导入数据、实现Cutmix
+- `model.py`：模型class实现、训练函数实现
+- `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
+- `test.py`：用来实现测试pth的正确率。
+
+# mission1
+## 待写
+
+# mission2
 ## cutmix说明
 1. 代码实现所在具体位置
 
-/src/dataloader.py
+/mission2/dataloader.py
 
 ![image](https://github.com/He1senbergg/FinalTerm-Part2/assets/148076707/4b33d7de-fae2-475e-9e0e-e4bfb84281a7)
 
 2. 训练中调用的位置
 
-/src/model.py
+/mission2/train.py中调用model.py
+
+/mission2/model.py
 
 ![image](https://github.com/He1senbergg/FinalTerm-Part2/assets/148076707/641b16cf-29fc-4fa9-91e2-c4656108f5a5)
 
 ## Ⅰ. 准备步骤
 **1. 代码下载**
-下载Repo中的四个python文件，放在同级目录
+下载Repo中`/mission2`下的四个python文件，放在同级目录。
 
 调整终端目录，以便train.py能方便的导入其他同级目录的函数。
 
@@ -30,17 +48,17 @@ cd 四个文件摆放的同级目录位置
 **2. 可调参数概述**
 | 参数名        | 类型    | 默认值                                         | 描述                                               |
 |-------------|---------|-----------------------------------------------|----------------------------------------------------|
-| `--trytime` | int     | (必须指定)                                     | Try number for the training configuration.         |
+| `--trytime` | int     | (**必须指定**)                                     | 运行轮次计数         |
 | `--data_dir`| str     | '/mnt/ly/models/FinalTerm/mission2/data'       | Path to the CIFAR100 dataset directory.            |
 | `--batch_size` | int  | 64                                             | Batch size for training.                           |
-| `--num_epochs` | int  | 70                                             | Number of epochs for training.                     |
+| `--num_epochs` | int  | 70                                             | 训练轮次设定                     |
 | `--lr`      | float   | 0.001                                          | Learning rate for the optimizer.                   |
 | `--momentum`| float   | 0.9                                            | Momentum for the SGD optimizer.                    |
 | `--pthpath`| str     | None                                           | Path to a saved model checkpoint to continue training. |
-| `--optimizer` | str  | 'SGD'                                          | Optimizer to use (SGD or Adam).                    |
-| `--base_dir` | str   | (必须指定)                                     | Base directory for saving model and logs.          |
+| `--optimizer` | str  | 'SGD'                                          | Optimizer to use (SGD or Adam or AdamW).**大小写敏感**                   |
+| `--base_dir` | str   | (**必须指定**)                                     | Base directory for saving model and logs.          |
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
-| `--milestones` | list | None                                          | List of epochs to decrease the learning rate.      |
+| `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
 | `--model`   | str    | 'vgg11'                                          | Model to train ("vgg11" or "vit").                     |
 | `--scratch` | bool   | False                                          | Train the model from scratch.                      |
