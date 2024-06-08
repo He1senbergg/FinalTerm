@@ -2,21 +2,94 @@
 
 # 仓库文件说明
 ## mission1 对比监督学习和自监督学习在图像分类任务上的性能表现
-一共 个代码文件。
-- ``
-- ``
-- ``
-- ``
+一共四个代码文件。
+- `dataloader.py`：导入数据。
+- `model.py`：模型class实现、训练函数实现。
+- `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
+- `test.py`：用来实现测试pth的正确率。
 
 ## mission2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
 一共四个代码文件。
-- `dataloader.py`：导入数据、实现Cutmix
-- `model.py`：模型class实现、训练函数实现
+- `dataloader.py`：导入数据、实现Cutmix。
+- `model.py`：模型class实现、训练函数实现。
 - `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
 - `test.py`：用来实现测试pth的正确率。
 
 # mission1
-## 待写
+## Ⅰ. 准备步骤
+**1. 代码下载**
+下载Repo中`/mission1`下的四个python文件，放在同级目录。
+
+调整终端目录，以便train.py能方便的导入其他同级目录的函数。
+
+命令行运行代码
+```
+cd 四个文件摆放的同级目录位置
+```
+
+**2. 可调参数概述**
+| 参数名        | 类型    | 默认值                                         | 描述                                               |
+|-------------|---------|-----------------------------------------------|----------------------------------------------------|
+| `--trytime` | int     | (**必须指定**)                                     | 运行轮次序号         |
+| `--data_dir`| str     | 服务器上的数据集位置(**必须指定**)      | Path to the CIFAR100 dataset directory.            |
+| `--batch_size` | int  | 64                                             | Batch size for training.                           |
+| `--num_epochs` | int  | 70                                             | 训练轮次设定                     |
+| `--lr`      | float   | 0.001                                          | Learning rate for the optimizer.                   |
+| `--momentum`| float   | 0.9                                            | Momentum for the SGD optimizer.                    |
+| `--pthpath`| str     | None                                           | Path to a saved model checkpoint to continue training. |
+| `--optimizer` | str  | 'SGD'(**大小写敏感**)                     | Optimizer to use (SGD or Adam or AdamW).                   |
+| `--base_dir` | str   | (**必须指定**)                                     | Base directory for saving model and logs.          |
+| `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
+| `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
+| `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
+| `--strategy`   | str    | (**必须指定，全小写缩写**)                 | Strategy for training  |
+
+**3. 必须自适应调整的参数**
+
+`--try_times`: 运行轮次序号。
+
+每次运行，都需要设置try_times。目的是为了辅助文件夹进行排序，其，实为放在开头的轮次序号。该数没有过多要求，只要是int且不在同一个int使用相同的配置即可（否则会自动弹出报错）。
+
+`--data_dir`：改为本地CIFAR100的位置（绝对位置）
+
+因为代码中的默认地址信息为服务器上的地址，所以本地运行时，必须在命令行中重新赋值以修改。
+
+`--base_dir`：运行过程中，进行保存pathpth和log时的根目录。
+
+根目录需要自适应修改。代码实现了，会在base_dir/model/下，以各个当前运行的参数进行命名文件夹名a，随后会在base_dir/model/a/下进行pth的保存。同理会在base_dir/tensorboard/a/下进行log的保存。
+
+*注：其中文件夹名a为f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"*
+
+`--strategy`：训练策略
+
+参数待选项含义
+- "ss"：Self-Supervised (from scratch)
+- "s"：Supervised (from scratch)
+- "sl"：Self-supervised Linear-protocal (frozen the parameters before the FC layer)
+- "pl"：Pretrain (on ImageNet via supervised) Linear-protocal (frozen the parameters before the FC layer)
+
+**4. 下载模型权重文件**
+
+模型权重1: 在ImageNet上pre-trained的ResNet-18进行线性评估训练得到的模型。
+```
+wget 
+```
+
+模型权重2: 从零经过自监督学习与线性评估得到的模型。
+```
+wget 
+```
+
+模型权重3：从零进行监督学习得到的模型。
+```
+wget 
+```
+
+## Ⅱ. 训练
+待补全
+
+## Ⅲ. 测试
+待补全
 
 # mission2
 ## cutmix说明
@@ -50,7 +123,7 @@ cd 四个文件摆放的同级目录位置
 | 参数名        | 类型    | 默认值                                         | 描述                                               |
 |-------------|---------|-----------------------------------------------|----------------------------------------------------|
 | `--trytime` | int     | (**必须指定**)                                     | 运行轮次序号         |
-| `--data_dir`| str     | 服务器上的数据集位置                        | Path to the CIFAR100 dataset directory.            |
+| `--data_dir`| str     | 服务器上的数据集位置(**必须指定**)      | Path to the CIFAR100 dataset directory.            |
 | `--batch_size` | int  | 64                                             | Batch size for training.                           |
 | `--num_epochs` | int  | 70                                             | 训练轮次设定                     |
 | `--lr`      | float   | 0.001                                          | Learning rate for the optimizer.                   |
