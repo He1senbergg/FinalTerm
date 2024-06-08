@@ -30,7 +30,7 @@ cd 四个文件摆放的同级目录位置
 **2. 数据集准备**
 下载Tiny ImageNet
 
-命令行运行代码
+命令行运行代码（请注意修改以下的信息的绝对位置）
 ```
 wget http://cs231n.stanford.edu/tiny-imagenet-200.zip -P /path/to/your/directory
 ```
