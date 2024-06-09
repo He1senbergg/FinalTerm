@@ -1,14 +1,14 @@
 # FinalTerm（2024/06/09 11: 00）
 
 # 仓库文件说明
-## mission1 对比监督学习和自监督学习在图像分类任务上的性能表现
+## MISSION1 对比监督学习和自监督学习在图像分类任务上的性能表现
 一共四个代码文件。
 - `dataloader.py`：导入数据。
 - `model.py`：模型class实现、训练函数实现。
 - `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
 - `test.py`：用来实现测试pth的正确率。
 
-## mission2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
+## MISSION2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
 一共四个代码文件。
 - `dataloader.py`：导入数据、实现Cutmix。
 - `model.py`：模型class实现、训练函数实现。
