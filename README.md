@@ -102,6 +102,9 @@ wget
 
 ## Ⅱ. 训练
 待补全
+```
+python src/train.py --base_dir "/mnt/ly/models/FinalTerm/mission1/" --num_epochs 300 --data_dir "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200/" --strategy ss --trytime 3
+```
 
 ## Ⅲ. 测试
 待补全
