@@ -171,14 +171,16 @@ cd 四个文件摆放的同级目录位置
 
 **4. 下载模型权重文件**
 
-模型权重1: 在pre-trained的VGG-11基础上微调得到的结果。
-```
-wget 
-```
-
-模型权重2: 在pre-trained的ViT基础上微调得到的结果。
+模型权重1: 在pre-trained的ViT基础上微调得到的结果。(dropbox)
 ```
 wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=pjckvuv6kwg2clhuh10t60gvj&st=whxrahg8&dl=1
+```
+
+模型权重2: 在pre-trained的VGG-11基础上微调得到的结果。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
+```
+https://drive.google.com/file/d/1hoQ3OmsZ_wjpgozheug1yFJB09uAnb_B/view?usp=sharing 
 ```
 
 ## Ⅱ. 训练
