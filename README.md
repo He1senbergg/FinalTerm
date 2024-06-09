@@ -15,7 +15,7 @@
 - `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
 - `test.py`：用来实现测试pth的正确率。
 
-# mission1
+# MISSION1
 ## Ⅰ. 准备步骤
 **1. 代码下载**
 下载Repo中`/mission1`下的四个python文件，放在同级目录。
@@ -106,7 +106,7 @@ wget
 ## Ⅲ. 测试
 待补全
 
-# mission2
+# MISSION2
 ## cutmix说明
 1. 代码实现所在具体位置
 
