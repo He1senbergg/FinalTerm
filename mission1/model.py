@@ -178,7 +178,7 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
             optimizer.zero_grad()
 
             # features = model(images)
-            
+
             features1 = model(images1)
             features2 = model(images2)
 
@@ -204,7 +204,8 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
         # # -----测试-----
 
         # epoch_loss = running_loss / len(data_loader.dataset)
-        epoch_loss = running_loss
+        # epoch_loss = running_loss
+        epoch_loss = running_loss / len(data_loader)
         # 结束训练计时
         train_end_time = time.time()
         train_elapsed_time = train_end_time - train_start_time
