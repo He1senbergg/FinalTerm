@@ -3,7 +3,7 @@ import torch
 import argparse
 import torch.nn as nn
 from dataloader import Tiny_ImageNet, CIFAR100
-from model import load_model, NTXentLoss, self_supervised_train, supervised_train
+from model import load_model, NTXentLoss, ContrastiveLoss, self_supervised_train, supervised_train
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a ResNet-18 model on Tiny ImageNet or CIFAR-100.")
@@ -58,7 +58,8 @@ def main():
         model = load_model(self_supervised=True)
         # 分离出所有层的参数
         parameters = [{"params": model.parameters(), "lr": learning_rate}]
-        criterion = NTXentLoss()
+        # criterion = NTXentLoss()
+        criterion = ContrastiveLoss()
     # 如果是自监督学习的评估
     elif strategy == "sl":
         # 加载CIFAR100数据集 
@@ -97,7 +98,8 @@ def main():
         raise ValueError("Please provide the correct strategy.")
 
     # 构造目录名称
-    directory_name = f"{try_times}_{strategy}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
+    # directory_name = f"{try_times}_{strategy}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
+    directory_name = f"{try_times}_{strategy}_{pthpath}_{optimizer}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
     
     # 设置 save_dir 和 logdir
     save_dir = os.path.join(base_dir, "modelpth", directory_name)

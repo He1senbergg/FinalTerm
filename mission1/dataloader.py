@@ -22,7 +22,7 @@ def Tiny_ImageNet(batch_size: int = 64,
                   data_dir: str = r'/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200'):
     transform = SimCLRAugmentation()
     dataset = ImageFolder(root=data_dir, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=2, drop_last=True)
     return dataloader
 
 def CIFAR100(batch_size: int = 64, data_dir: str = r'/mnt/ly/models/FinalTerm/mission2/data'):

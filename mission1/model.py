@@ -3,6 +3,7 @@ import time
 import torch
 from torch import nn
 from collections import deque
+import torch.nn.functional as F
 from torch.optim import Optimizer
 import torchvision.models as models
 from torch.utils.data import DataLoader
@@ -47,7 +48,8 @@ def load_model(self_supervised=False, projection_dim=128, pretrained=False,
         raise ValueError('Invalid model type. Please specify one of self_supervised, pretrained, supervised.') 
     return model
 
-# 定义对比损失函数
+# 定义对比损失函数（待选方案1）
+# 效果不行
 class NTXentLoss(nn.Module):
     def __init__(self, temperature=0.5):
         super(NTXentLoss, self).__init__()
@@ -75,6 +77,69 @@ class NTXentLoss(nn.Module):
         loss = -mean_log_prob_pos.sum()
         return loss
 
+# 定义对比损失函数（待选方案2）
+class ContrastiveLoss(nn.Module):
+    def __init__(self, hidden_norm=True, temperature=1.0):
+        super(ContrastiveLoss, self).__init__()
+        self.hidden_norm = hidden_norm
+        self.temperature = temperature
+
+    def forward(self, out1, out2):
+        batch_size = out1.shape[0]  # 批次大小为64
+        # 如果设置hidden_norm，则进行模长归一化，它实为余弦相似度计算
+        # 否则，直接计算内积
+        if self.hidden_norm:
+            out1 = F.normalize(out1, p=2, dim=-1)
+            out2 = F.normalize(out2, p=2, dim=-1)
+
+        # # -----测试-----
+        # # 计算每个向量的平方和，应该接近于1
+        # norms_out1 = torch.sum(out1**2, dim=-1)
+        # norms_out2 = torch.sum(out2**2, dim=-1)
+        # return norms_out1, norms_out2
+        # # -----测试-----     
+           
+        # 按行复制
+        # labels = torch.eye(batch_size).to(out1.device).repeat(2, 1)
+        # 按列复制
+        labels = torch.eye(batch_size).to(out1.device).repeat(1, 2)
+
+        # -----测试-----
+        # masks = torch.eye(batch_size).to(out1.device)
+        # INF = float('inf')
+        # INF = 1e9
+        # -----测试-----
+
+        # 计算out1自身的相似度
+        logits_aa = torch.matmul(out1, out1.T) / self.temperature
+        # 计算Out2自身的相似度
+        logits_bb = torch.matmul(out2, out2.T) / self.temperature
+        # 计算out1与out1正向的相似度
+        logits_ab = torch.matmul(out1, out2.T) / self.temperature
+        # 计算out1与out1反向的相似度
+        logits_ba = torch.matmul(out2, out1.T) / self.temperature
+
+        # # -----测试-----
+        # # 通过赋值负无穷（softmax时被置零），去除对角线上的相似度
+        # logits_aa = logits_aa - masks * INF  # Remove same sample comparison
+        # logits_bb = logits_bb - masks * INF
+        # # -----测试-----
+
+        # # -----测试-----
+        # # 将对角线上的元素设置为0而不是极端负值
+        # logits_aa.fill_diagonal_(0)
+        # logits_bb.fill_diagonal_(0)
+        # # -----测试-----
+
+        loss_a = F.cross_entropy(torch.cat([logits_ab, logits_aa], dim=1), labels)
+        loss_b = F.cross_entropy(torch.cat([logits_ba, logits_bb], dim=1), labels)
+        # 平均两个对称的交叉熵损失
+        total_loss = (loss_a + loss_b) / 2
+        # total_loss *= batch_size
+
+        # return total_loss, loss_a, loss_b
+        return total_loss
+
 # 自监督学习训练函数
 def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: Optimizer, 
                           criterion: nn.Module, epochs: int = 70, 
@@ -83,7 +148,7 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
                           milestones: list = [], gamma: float = 0.1):
     
     divided = epochs // 10
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
     writer = SummaryWriter(log_dir=logdir)
@@ -105,15 +170,41 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
                 param_group['lr'] *= gamma
 
         train_start_time = time.time()
-        for images, _ in data_loader:
-            images = torch.cat(images, dim=0).to(device)
+        # for images, _ in data_loader:
+        for (images1, images2), _ in data_loader:
+            # images = torch.cat(images, dim=0).to(device)
+            images1 = images1.to(device)
+            images2 = images2.to(device)
             optimizer.zero_grad()
-            features = model(images)
-            loss = criterion(features)
+
+            # features = model(images)
+            
+            features1 = model(images1)
+            features2 = model(images2)
+
+            # loss = criterion(features)
+            # loss, lossa, lossb = criterion(features1, features2)
+
+            loss = criterion(features1, features2) 
+
+            # # -----测试-----
+            # print(loss.item(), lossa.item(), lossb.item())
+            # out1, out2 = criterion(features1, features2)
+            # print(out1)
+            # print(out2)
+            # break           
+            # # -----测试-----
+
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
-        epoch_loss = running_loss / len(data_loader.dataset)
+
+        # # -----测试-----
+        # break
+        # # -----测试-----
+
+        # epoch_loss = running_loss / len(data_loader.dataset)
+        epoch_loss = running_loss
         # 结束训练计时
         train_end_time = time.time()
         train_elapsed_time = train_end_time - train_start_time
@@ -144,7 +235,7 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
                 file_to_remove = lowest_TrainLoss_files.popleft()
                 os.remove(os.path.join(save_dir, file_to_remove))
         # 把epoch分成十等分，按照epoch进行保存模型，提供更多的模型选择
-        elif (epoch+1) % divided == 0:
+        if (epoch+1) % divided == 0:
             file_path = f"{epoch+1}_{epoch_loss}.pth"
             torch.save(model.state_dict(), os.path.join(save_dir, file_path))
     
@@ -158,7 +249,7 @@ def supervised_train(model: nn.Module, train_loader: DataLoader, test_loader: Da
                      save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
                      milestones: list = [], gamma: float = 0.1):
     
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
     writer = SummaryWriter(log_dir=logdir)
@@ -198,7 +289,7 @@ def supervised_train(model: nn.Module, train_loader: DataLoader, test_loader: Da
         # 结束训练计时
         train_end_time = time.time()
         train_elapsed_time = train_end_time - train_start_time
-        print(f'Epoch {epoch+1}/{epochs}, \nTrain Loss: {epoch_loss:.4f}, Training Time: {train_elapsed_time:.2f}s')
+        print(f'Epoch {epoch+1}/{epochs}, \nTrain Loss: {epoch_loss:.4f}, Training Accuracy: {epoch_acc:.4f}, Training Time: {train_elapsed_time:.2f}s')
 
         # 将训练loss写入TensorBoard
         writer.add_scalar('Loss/Train Loss', epoch_loss, epoch)
