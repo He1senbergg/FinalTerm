@@ -1,21 +1,21 @@
-# FinalTerm（2024/06/08 22: 00）
+# FinalTerm（2024/06/09 11: 00）
 
 # 仓库文件说明
-## mission1 对比监督学习和自监督学习在图像分类任务上的性能表现
+## MISSION1 对比监督学习和自监督学习在图像分类任务上的性能表现
 一共四个代码文件。
 - `dataloader.py`：导入数据。
 - `model.py`：模型class实现、训练函数实现。
 - `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
 - `test.py`：用来实现测试pth的正确率。
 
-## mission2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
+## MISSION2 在CIFAR-100数据集上比较基于Transformer和CNN的图像分类模型
 一共四个代码文件。
 - `dataloader.py`：导入数据、实现Cutmix。
 - `model.py`：模型class实现、训练函数实现。
 - `train.py`：主要调用python文件，在其中导入了`dataloader.py`与`model.py`。在使用时，该文件需要命令行输入所需的参数（后文会明确指明），随后运行即可。
 - `test.py`：用来实现测试pth的正确率。
 
-# mission1
+# MISSION1
 ## Ⅰ. 准备步骤
 **1. 代码下载**
 下载Repo中`/mission1`下的四个python文件，放在同级目录。
@@ -102,11 +102,14 @@ wget
 
 ## Ⅱ. 训练
 待补全
+```
+python src/train.py --base_dir "/mnt/ly/models/FinalTerm/mission1/" --num_epochs 300 --data_dir "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200/" --strategy ss --trytime 3
+```
 
 ## Ⅲ. 测试
 待补全
 
-# mission2
+# MISSION2
 ## cutmix说明
 1. 代码实现所在具体位置
 
@@ -171,14 +174,16 @@ cd 四个文件摆放的同级目录位置
 
 **4. 下载模型权重文件**
 
-模型权重1: 在pre-trained的VGG-11基础上微调得到的结果。
-```
-wget 
-```
-
-模型权重2: 在pre-trained的ViT基础上微调得到的结果。
+模型权重1: 在pre-trained的ViT基础上微调得到的结果。(dropbox)
 ```
 wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=pjckvuv6kwg2clhuh10t60gvj&st=whxrahg8&dl=1
+```
+
+模型权重2: 在pre-trained的VGG-11基础上微调得到的结果。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
+```
+https://drive.google.com/file/d/1hoQ3OmsZ_wjpgozheug1yFJB09uAnb_B/view?usp=sharing 
 ```
 
 ## Ⅱ. 训练
