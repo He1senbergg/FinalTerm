@@ -8,7 +8,7 @@ from model import load_model, NTXentLoss, ContrastiveLoss, self_supervised_train
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a ResNet-18 model on Tiny ImageNet or CIFAR-100.")
     parser.add_argument('--trytime', type=int, required=True, help='Try number for the training configuration.')
-    parser.add_argument('--data_dir', type=str, default=r'/mnt/ly/models/FinalTerm/mission2/data', help='Path to the dataset directory.')
+    parser.add_argument('--data_dir', type=str, default=r'/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200', help='Path to the dataset directory.')
     parser.add_argument('--batch_size', type=int, default=64, help='Batch size for training.')
     parser.add_argument('--num_epochs', type=int, default=70, help='Number of epochs for training.')
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate for the optimizer.')
@@ -99,7 +99,8 @@ def main():
 
     # 构造目录名称
     # directory_name = f"{try_times}_{strategy}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
-    directory_name = f"{try_times}_{strategy}_{pthpath}_{optimizer}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
+    modelpth = os.path.basename(pthpath) if pthpath else None
+    directory_name = f"{try_times}_{strategy}_{modelpth}_{optimizer}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{milestones}_{gamma}"
     
     # 设置 save_dir 和 logdir
     save_dir = os.path.join(base_dir, "modelpth", directory_name)

@@ -79,18 +79,15 @@ class NTXentLoss(nn.Module):
 
 # 定义对比损失函数（待选方案2）
 class ContrastiveLoss(nn.Module):
-    def __init__(self, hidden_norm=True, temperature=1.0):
+    def __init__(self, temperature=1.0):
         super(ContrastiveLoss, self).__init__()
-        self.hidden_norm = hidden_norm
         self.temperature = temperature
 
     def forward(self, out1, out2):
         batch_size = out1.shape[0]  # 批次大小为64
-        # 如果设置hidden_norm，则进行模长归一化，它实为余弦相似度计算
-        # 否则，直接计算内积
-        if self.hidden_norm:
-            out1 = F.normalize(out1, p=2, dim=-1)
-            out2 = F.normalize(out2, p=2, dim=-1)
+        # 进行模长归一化，它实为余弦相似度计算
+        out1 = F.normalize(out1, p=2, dim=-1)
+        out2 = F.normalize(out2, p=2, dim=-1)
 
         # # -----测试-----
         # # 计算每个向量的平方和，应该接近于1
@@ -227,14 +224,13 @@ def self_supervised_train(model: nn.Module, data_loader: DataLoader, optimizer: 
             # 更新最小的loss
             lowest_loss = epoch_loss
             # 与按epoch等分进行区分开
-            if (epoch+1) % divided == 0:
-                continue
-            file_path = f"{epoch+1}_{epoch_loss}.pth"
-            torch.save(model.state_dict(), os.path.join(save_dir, file_path))
-            lowest_TrainLoss_files.append(file_path)
-            if len(lowest_TrainLoss_files) > 10:
-                file_to_remove = lowest_TrainLoss_files.popleft()
-                os.remove(os.path.join(save_dir, file_to_remove))
+            if (epoch+1) % divided != 0:
+                file_path = f"{epoch+1}_{epoch_loss}.pth"
+                torch.save(model.state_dict(), os.path.join(save_dir, file_path))
+                lowest_TrainLoss_files.append(file_path)
+                if len(lowest_TrainLoss_files) > 10:
+                    file_to_remove = lowest_TrainLoss_files.popleft()
+                    os.remove(os.path.join(save_dir, file_to_remove))
         # 把epoch分成十等分，按照epoch进行保存模型，提供更多的模型选择
         if (epoch+1) % divided == 0:
             file_path = f"{epoch+1}_{epoch_loss}.pth"
@@ -259,7 +255,7 @@ def supervised_train(model: nn.Module, train_loader: DataLoader, test_loader: Da
     init_img = torch.zeros((1, 3, 224, 224)).to(device)  # 假设输入图像尺寸为 (3, 224, 224)
     writer.add_graph(model, init_img)
 
-    best_test_acc = float("inf")
+    best_test_acc = 0.0
     best_test_files = deque()
     for epoch in range(epochs):
         model.train()
