@@ -80,34 +80,95 @@ python data_process.py --data_dir /path/to/your/directory
 参数待选项含义
 - "ss"：Self-Supervised (from scratch)
 - "s"：Supervised (from scratch)
-- "sl"：Self-supervised Linear-protocal (frozen the parameters before the FC layer)
-- "pl"：Pretrain (on ImageNet via supervised) Linear-protocal (frozen the parameters before the FC layer)
+- "sl1"：Self-supervised Linear-protocal
+  - frozen the parameters before the FC layer
+- "sl2"：Self-supervised Linear-protocal
+  - parameters before the FC layer: learning rate*0.1
+  - FC layer: learning rate
+- "pl1"：Pretrain (on ImageNet via supervised) Linear-protocal
+  - frozen the parameters before the FC layer
+- "pl2"：Pretrain (on ImageNet via supervised) Linear-protocal
+  - parameters before the FC layer: learning rate*0.1
+  - FC layer: learning rate
 
 **5. 下载模型权重文件**
 
-模型权重1: 在ImageNet上pre-trained的ResNet-18进行线性评估训练得到的模型。
+模型权重1: 在ImageNet上pre-trained的ResNet-18只训练分类层得到的模型。(Google Drive)
 ```
-wget 
-```
-
-模型权重2: 从零经过自监督学习与线性评估得到的模型。
-```
-wget 
+https://drive.google.com/file/d/1yoffo1ex-ccwM_DMeit6tK_AOGQinTeE/view?usp=sharing
 ```
 
-模型权重3：从零进行监督学习得到的模型。
+模型权重2: 在ImageNet上pre-trained的ResNet-18经过全局微调训练得到的模型。(Google Drive)
 ```
-wget 
+
+```
+
+模型权重3: 从零经过自监督学习（Tiny ImageNet）预训练得到的模型。(Google Drive)
+```
+
+```
+
+模型权重4: 从零经过自监督学习（Tiny ImageNet）预训练，再只训练分类层得到的模型。(Google Drive)
+```
+
+```
+
+模型权重5: 从零经过自监督学习（Tiny ImageNet）预训练，再经过全局微调训练得到的模型。(Google Drive)
+```
+
+```
+
+模型权重6：从零进行监督学习得到的模型。(Google Drive)
+```
+https://drive.google.com/file/d/1KUVjIUjCiYd0HbsztkmMRJG1wZ0y7qqG/view?usp=sharing 
 ```
 
 ## Ⅱ. 训练
-待补全
-```
-python src/train.py --base_dir "/mnt/ly/models/FinalTerm/mission1/" --num_epochs 300 --data_dir "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200/" --strategy ss --trytime 3
-```
+
+命令行运行代码
+
+注：自监督学习的`data_dir`指向Tiny-ImageNet的位置，监督学习的`data_dir`指向CIFAR100的位置。如果多次尝试，建议每次修改trytime（如每次加1）。
+- 示例1（请注意修改以下的信息的绝对位置）：使用自监督学习在Tiny ImageNet上进行预训练（默认参数）
+  ```
+  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 1 --strategy ss --num_epochs 10
+  ```
+- 示例2（请注意修改以下的信息的绝对位置）：对自监督学习得到的预训练模型，使用监督学习在CIFAR100上进行微调训练。
+
+  注：在以下的示例代码中，若只训练分类层，输入`--strategy sl1`；若全局微调，则输入`--strategy sl2`。
+  ```
+  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --pthpath "path to self-supervised model's pth" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 2 --strategy sl1 --num_epochs 10
+  ```
+- 示例3（请注意修改以下的信息的绝对位置）：对监督学习（on ImageNet）得到的预训练模型，使用监督学习在CIFAR100上进行微调训练。
+
+  注：在以下的示例代码中，若只训练分类层，输入`--strategy pl1`；若全局微调，则输入`--strategy pl2`。
+  ```
+  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 3 --strategy pl1 --num_epochs 10
+  ```
+- 示例4（请注意修改以下的信息的绝对位置）：使用监督学习在CIFAR100上从零开始训练。
+  ```
+  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 4 --strategy s --num_epochs 10
+  ```
+- 额外：如果想尝试参数列表中的其它参数，请按照如下形式，添加在`示例1-示例4`的代码中。
+  ```
+  --batch_size 256
+  ```
+  ```
+  --optimizer Adam
+  ```
 
 ## Ⅲ. 测试
-待补全
+
+测试的效果为输出如下信息：
+```python
+print(f'Val Loss: {val_loss:.4f}, Val Accuracy: {val_acc:.4f}, Val Time: {val_elapsed_time:.2f}s')
+```
+
+测试时，必须提供四个参数'--data_dir'、'--pthpath'、'--batch_size'、'--model'。
+
+命令行运行代码，示例如下（请注意修改以下的信息的绝对位置）：
+```
+python test.py --data_dir "path to CIFAR100" --pthpath model.pth --batch_size 64
+```
 
 # MISSION2
 ## cutmix说明
@@ -190,25 +251,26 @@ https://drive.google.com/file/d/1hoQ3OmsZ_wjpgozheug1yFJB09uAnb_B/view?usp=shari
 
 命令行运行代码
 
+注：如果多次尝试，建议每次修改trytime（如每次加1）。
 - 示例1（请注意修改以下的信息的绝对位置）：使用预训练vgg11模型与默认参数进行训练
   ```
   python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10
   ```
 - 示例2（请注意修改以下的信息的绝对位置）：使用预训练vit模型与默认参数进行训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10 --model vit
+  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 2 --num_epochs 10 --model vit
   ```
 - 示例3（请注意修改以下的信息的绝对位置）：使用预训练vgg11模型、Adam与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam --trytime 2 --num_epochs 10
+  python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam --trytime 3 --num_epochs 10
   ```
 - 示例4（请注意修改以下的信息的绝对位置）：使用随机初始化vgg11模型与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2--scratch True --trytime 3 --num_epochs 10
+  python train.py --data_dir /mission2/data --base_dir /mission2--scratch True --trytime 4 --num_epochs 10
   ```
 - 示例5（请注意修改以下的信息的绝对位置）：使用本地vgg11模型的pth与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth --trytime 4 --num_epochs 10
+  python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth --trytime 5 --num_epochs 10
   ```
 
 ## Ⅲ. 测试
