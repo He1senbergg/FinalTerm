@@ -2,15 +2,14 @@ import time
 import torch
 import argparse
 import torch.nn as nn
-from dataloader import get_loaders
-from model import VGG_11, vit_b16_expand_model
+from dataloader import CIFAR100
+from model import load_model
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Test a ViT/VGG model on the CIFAR100 dataset.")
+    parser = argparse.ArgumentParser(description="Test a ResNet-18 model on the CIFAR100 dataset.")
     parser.add_argument('--data_dir', type=str, default=r'/mnt/ly/models/FinalTerm/mission2/data', help='Path to the CIFAR100 dataset directory.')
     parser.add_argument('--pthpath', type=str, required=True, help='Path to a saved model checkpoint to test.')
     parser.add_argument('--batch_size', type=int, required=True, help='The batch_size used during training.')
-    parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], required=True, help='The model to use for training (VGG11 or ViT).')
     return parser.parse_args()
 
 def main():
@@ -19,16 +18,12 @@ def main():
     data_dir = args.data_dir
     pthpath = args.pthpath
     batch_size = args.batch_size
-    model = args.model
 
-    train_loader, test_loader = get_loaders(batch_size, data_dir)
+    train_loader, test_loader = CIFAR100(batch_size=batch_size, data_dir=data_dir)
 
     criterion = nn.CrossEntropyLoss()
 
-    if model == "vgg11":
-        model = VGG_11(pthpath=pthpath) 
-    elif model == "vit":
-        model = vit_b16_expand_model(pthpath=pthpath)
+    model = load_model(test=True, pthpath=pthpath)
     
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 

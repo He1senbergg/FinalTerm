@@ -36,11 +36,13 @@ def load_model(self_supervised=False, projection_dim=128, pretrained=False,
         model.fc = nn.Linear(model.fc.in_features, 100)
     # 使用CIFAR-100从零进行监督学习
     elif supervised:
-        model = models.resnet18()
+        model = models.resnet18(weights=None)
         model.fc = nn.Linear(model.fc.in_features, 100)
     # 完成后进行模型测试
     # 此时任何方式训练的模型，都已经按照CIFAR进行了模型结构调整
     elif test:
+        if not pthpath:
+            raise ValueError('Please provide the path to the checkpoint.')
         model = models.resnet18()
         model.fc = nn.Linear(model.fc.in_features, 100)
         model.load_state_dict(torch.load(pthpath))
