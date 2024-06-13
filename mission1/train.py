@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
     parser.add_argument('--milestones', type=list, default=[], help='List of epochs to decrease the learning rate.')
     parser.add_argument('--gamma', type=float, default=0.1, help='Factor to decrease the learning rate.')
-    parser.add_argument('--strategy', type=str, choices=['ss', "s", 'sl', "pl"], required=True, help='Self-Supervised or Supervised or Self-Supervised Linear Protocal or Pretrained Linear Protocal.')
+    parser.add_argument('--strategy', type=str, choices=['ss', "s", 'sl1', "sl2", "pl1", "pl2"], required=True, help='Self-Supervised or Supervised or Self-Supervised Linear Protocal or Pretrained Linear Protocal.')
     return parser.parse_args()
 
 def main():
@@ -61,19 +61,25 @@ def main():
         # criterion = NTXentLoss()
         criterion = ContrastiveLoss()
     # 如果是自监督学习的评估
-    elif strategy == "sl":
+    elif strategy in ["sl1", "sl2"]:
         # 加载CIFAR100数据集 
         train_loader, test_loader = CIFAR100(batch_size=batch_size, data_dir=data_dir)
         if not pthpath:
             raise ValueError("进行自监督学习的评估时，需要提供自监督学习得到的模型的路径。")
         # 加载SimCLR算法对应的模型去除projection head层后的模型。
-        model = load_model(self_supervised=True, linear_protocal=True, pthpath=pthpath)  
-        # 冻结模型除分类层以外的所有层的参数
-        for name, param in model.named_parameters():
-            if 'fc' not in name:
-                param.requires_grad = False 
-        # 分离出分类层的参数
-        parameters = [{'params': model.fc.parameters(), 'lr': learning_rate}]  
+        model = load_model(self_supervised=True, linear_protocal=True, pthpath=pthpath) 
+        if strategy == "sl1":
+            # 冻结模型除分类层以外的所有层的参数
+            for name, param in model.named_parameters():
+                if 'fc' not in name:
+                    param.requires_grad = False 
+            # 分离出分类层的参数
+            parameters = [{'params': model.fc.parameters(), 'lr': learning_rate}]  
+        else:
+            parameters = [
+            {"params": model.fc.parameters(), "lr": learning_rate},
+            {"params": [param for name, param in model.named_parameters() if "fc" not in name], "lr": learning_rate*0.1}
+            ]
         criterion = nn.CrossEntropyLoss()   
     # 如果是从零开始的监督学习
     elif strategy == "s":
@@ -83,16 +89,22 @@ def main():
         parameters = [{"params": model.parameters(), "lr": learning_rate}]
         criterion = nn.CrossEntropyLoss()
     # 如果是加载torch中在ImageNet上预训练的模型进行评估
-    elif strategy == "pl":
+    elif strategy in ["pl1", "pl2"]:
         # 加载CIFAR100数据集
         train_loader, test_loader = CIFAR100(batch_size=batch_size, data_dir=data_dir)
         model = load_model(pretrained=True)
-        # 冻结模型除分类层以外的所有层的参数
-        for name, param in model.named_parameters():
-            if 'fc' not in name:
-                param.requires_grad = False 
-        # 分离出分类层的参数
-        parameters = [{"params": model.fc.parameters(), "lr": learning_rate}]
+        if strategy == "pl1":
+            # 冻结模型除分类层以外的所有层的参数
+            for name, param in model.named_parameters():
+                if 'fc' not in name:
+                    param.requires_grad = False 
+            # 分离出分类层的参数
+            parameters = [{"params": model.fc.parameters(), "lr": learning_rate}]
+        else:
+            parameters = [
+            {"params": model.fc.parameters(), "lr": learning_rate},
+            {"params": [param for name, param in model.named_parameters() if "fc" not in name], "lr": learning_rate*0.1}
+            ]
         criterion = nn.CrossEntropyLoss()
     else:
         raise ValueError("Please provide the correct strategy.")
