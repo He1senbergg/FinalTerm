@@ -157,7 +157,18 @@ https://drive.google.com/file/d/1KUVjIUjCiYd0HbsztkmMRJG1wZ0y7qqG/view?usp=shari
   ```
 
 ## Ⅲ. 测试
-待补全
+
+测试的效果为输出如下信息：
+```python
+print(f'Val Loss: {val_loss:.4f}, Val Accuracy: {val_acc:.4f}, Val Time: {val_elapsed_time:.2f}s')
+```
+
+测试时，必须提供四个参数'--data_dir'、'--pthpath'、'--batch_size'、'--model'。
+
+命令行运行代码，示例如下（请注意修改以下的信息的绝对位置）：
+```
+python test.py --data_dir "path to CIFAR100" --pthpath model.pth --batch_size 64
+```
 
 # MISSION2
 ## cutmix说明
