@@ -130,23 +130,23 @@ https://drive.google.com/file/d/1KUVjIUjCiYd0HbsztkmMRJG1wZ0y7qqG/view?usp=shari
 注：自监督学习的`data_dir`指向Tiny-ImageNet的位置，监督学习的`data_dir`指向CIFAR100的位置。如果多次尝试，建议每次修改trytime（如每次加1）。
 - 示例1（请注意修改以下的信息的绝对位置）：使用自监督学习在Tiny ImageNet上进行预训练（默认参数）
   ```
-  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission1/dataset/tiny-imagenet-200" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 1 --strategy ss --num_epochs 10
+  python train.py --data_dir "path to tiny-imagenet-200" --base_dir "path to save log and pth" --trytime 1 --strategy ss --num_epochs 10
   ```
 - 示例2（请注意修改以下的信息的绝对位置）：对自监督学习得到的预训练模型，使用监督学习在CIFAR100上进行微调训练。
 
   注：在以下的示例代码中，若只训练分类层，输入`--strategy sl1`；若全局微调，则输入`--strategy sl2`。
   ```
-  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --pthpath "path to self-supervised model's pth" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 2 --strategy sl1 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --pthpath "path to self-supervised model's pth" --base_dir "path to save log and pth" --trytime 2 --strategy sl1 --num_epochs 10
   ```
 - 示例3（请注意修改以下的信息的绝对位置）：对监督学习（on ImageNet）得到的预训练模型，使用监督学习在CIFAR100上进行微调训练。
 
   注：在以下的示例代码中，若只训练分类层，输入`--strategy pl1`；若全局微调，则输入`--strategy pl2`。
   ```
-  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 3 --strategy pl1 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --trytime 3 --strategy pl1 --num_epochs 10
   ```
 - 示例4（请注意修改以下的信息的绝对位置）：使用监督学习在CIFAR100上从零开始训练。
   ```
-  python train.py --data_dir "/mnt/ly/models/FinalTerm/mission2/data" --base_dir "/mnt/ly/models/FinalTerm/mission1/" --trytime 4 --strategy s --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --trytime 4 --strategy s --num_epochs 10
   ```
 - 额外：如果想尝试参数列表中的其它参数，请按照如下形式，添加在`示例1-示例4`的代码中。
   ```
@@ -254,23 +254,23 @@ https://drive.google.com/file/d/1hoQ3OmsZ_wjpgozheug1yFJB09uAnb_B/view?usp=shari
 注：如果多次尝试，建议每次修改trytime（如每次加1）。
 - 示例1（请注意修改以下的信息的绝对位置）：使用预训练vgg11模型与默认参数进行训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 1 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --trytime 1 --num_epochs 10
   ```
 - 示例2（请注意修改以下的信息的绝对位置）：使用预训练vit模型与默认参数进行训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --trytime 2 --num_epochs 10 --model vit
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --trytime 2 --num_epochs 10 --model vit
   ```
 - 示例3（请注意修改以下的信息的绝对位置）：使用预训练vgg11模型、Adam与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --optimizer Adam --trytime 3 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --optimizer Adam --trytime 3 --num_epochs 10
   ```
 - 示例4（请注意修改以下的信息的绝对位置）：使用随机初始化vgg11模型与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2--scratch True --trytime 4 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth"--scratch True --trytime 4 --num_epochs 10
   ```
 - 示例5（请注意修改以下的信息的绝对位置）：使用本地vgg11模型的pth与其他默认参数开始训练
   ```
-  python train.py --data_dir /mission2/data --base_dir /mission2 --pthpath model.pth --trytime 5 --num_epochs 10
+  python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --pthpath model.pth --trytime 5 --num_epochs 10
   ```
 
 ## Ⅲ. 测试
