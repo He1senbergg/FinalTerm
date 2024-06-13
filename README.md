@@ -80,9 +80,17 @@ python data_process.py --data_dir /path/to/your/directory
 参数待选项含义
 - "ss"：Self-Supervised (from scratch)
 - "s"：Supervised (from scratch)
-- "sl"：Self-supervised Linear-protocal (frozen the parameters before the FC layer)
-- "pl"：Pretrain (on ImageNet via supervised) Linear-protocal (frozen the parameters before the FC layer)
-
+- "sl1"：Self-supervised Linear-protocal
+  - frozen the parameters before the FC layer
+- "sl2"：Self-supervised Linear-protocal
+  - parameters before the FC layer: learning rate*0.1
+  - FC layer: learning rate
+- "pl1"：Pretrain (on ImageNet via supervised) Linear-protocal
+  - frozen the parameters before the FC layer
+- "pl2"：Pretrain (on ImageNet via supervised) Linear-protocal
+  - parameters before the FC layer: learning rate*0.1
+  - FC layer: learning rate
+  - 
 **5. 下载模型权重文件**
 
 模型权重1: 在ImageNet上pre-trained的ResNet-18进行线性评估训练得到的模型。
