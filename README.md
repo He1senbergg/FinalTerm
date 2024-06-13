@@ -102,7 +102,7 @@ https://drive.google.com/file/d/1yoffo1ex-ccwM_DMeit6tK_AOGQinTeE/view?usp=shari
 
 模型权重2: 在ImageNet上pre-trained的ResNet-18经过全局微调训练得到的模型。(Google Drive)
 ```
-
+https://drive.google.com/file/d/14LN02EpIHkkBkvlixGS7NKQF9UkDg7wE/view?usp=sharing
 ```
 
 模型权重3: 从零经过自监督学习（Tiny ImageNet）预训练得到的模型。(Google Drive)
