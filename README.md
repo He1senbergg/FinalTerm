@@ -1,4 +1,6 @@
 # FinalTerm（2024/06/13 15: 30）
+待完善内容：
+- pth还需要补齐。
 
 # 仓库文件说明
 ## MISSION1 对比监督学习和自监督学习在图像分类任务上的性能表现
@@ -100,7 +102,7 @@ https://drive.google.com/file/d/1yoffo1ex-ccwM_DMeit6tK_AOGQinTeE/view?usp=shari
 
 模型权重2: 在ImageNet上pre-trained的ResNet-18经过全局微调训练得到的模型。(Google Drive)
 ```
-
+https://drive.google.com/file/d/14LN02EpIHkkBkvlixGS7NKQF9UkDg7wE/view?usp=sharing
 ```
 
 模型权重3: 从零经过自监督学习（Tiny ImageNet）预训练得到的模型。(Google Drive)
