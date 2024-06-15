@@ -3,7 +3,7 @@ import torch
 import argparse
 import torch.nn as nn
 from dataloader import Tiny_ImageNet, CIFAR100
-from model import load_model, NTXentLoss, ContrastiveLoss, self_supervised_train, supervised_train
+from model import load_model, NTXentLoss1, NTXentLoss2, ContrastiveLoss, self_supervised_train, supervised_train
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a ResNet-18 model on Tiny ImageNet or CIFAR-100.")
@@ -58,8 +58,9 @@ def main():
         model = load_model(self_supervised=True)
         # 分离出所有层的参数
         parameters = [{"params": model.parameters(), "lr": learning_rate}]
-        # criterion = NTXentLoss()
-        criterion = ContrastiveLoss()
+        # criterion = NTXentLoss1()
+        # criterion = ContrastiveLoss()
+        criterion = NTXentLoss2()
     # 如果是自监督学习的评估
     elif strategy in ["sl1", "sl2"]:
         # 加载CIFAR100数据集 
@@ -138,7 +139,7 @@ def main():
         optimizer = torch.optim.AdamW(parameters, weight_decay=decay, eps=1e-8)
 
     if strategy == "ss":
-        self_supervised_train(model, train_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
+        self_supervised_train(model, train_loader, optimizer, criterion, num_epochs, gamma, logdir, save_dir)
     else:
         supervised_train(model, train_loader, test_loader, optimizer, criterion, num_epochs, logdir, save_dir, milestones, gamma)
     
