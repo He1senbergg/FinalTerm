@@ -3,6 +3,7 @@ import time
 import torch
 import torch.nn as nn
 from copy import deepcopy
+import torch.optim as optim
 from collections import deque
 from dataloader import cutmix
 from torch.optim import Optimizer
@@ -64,25 +65,19 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
                 criterion: nn.Module, optimizer: Optimizer, num_epochs: int = 70, 
                 logdir: str ='/mnt/ly/models/FinalTerm/mission2/tensorboard/1',
                 save_dir: str ='/mnt/ly/models/FinalTerm/mission2/modelpth/1',
-                chioce: str = "vgg11", milestones: list = [], gamma: float = 0.1):
+                step_size: int = 10, chioce: str = "vgg11"):
     
-    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
     writer = SummaryWriter(log_dir=logdir)
-
+    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=0.1)
     best_test_acc = 0.0
     best_test_files = deque()
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
         # corrects = 0
-
-        # 当optimizer为SGD时，更新学习率。
-        # 当optimizer为Adam时，milestones为空，不会执行。
-        if epoch+1 in milestones:
-            for param_group in optimizer.param_groups:
-                param_group['lr'] *= gamma
 
         # 开始训练计时
         train_start_time = time.time()
@@ -120,6 +115,9 @@ def train_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoa
         epoch_loss = running_loss / len(train_loader.dataset)
         # cutmix计算准确率没什么意义，只需计算test accuracy
         # epoch_acc = corrects.double() / total
+
+        # 每个epoch结束后更新学习率
+        scheduler.step()
 
         # 结束训练计时
         train_end_time = time.time()

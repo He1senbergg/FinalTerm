@@ -17,8 +17,7 @@ def parse_args():
     parser.add_argument('--optimizer', type=str, choices=['SGD', 'Adam', "AdamW"], default='SGD', help='Optimizer to use (SGD or Adam).')
     parser.add_argument('--base_dir', type=str, required=True, help='Base directory for saving model and logs.')
     parser.add_argument('--decay', type=float, default=1e-3, help='Weight decay for the optimizer.')
-    parser.add_argument('--milestones', type=list, default=[], help='List of epochs to decrease the learning rate.')
-    parser.add_argument('--gamma', type=float, default=0.1, help='Factor to decrease the learning rate.')
+    parser.add_argument('--step_size', type=int, required=True, help='step size for the learning rate scheduler.')
     parser.add_argument('--model', type=str, choices=['vgg11', 'vit'], default='vgg11', help='Model to train (VGG11 or ViT or AdamW).')
     parser.add_argument('--scratch', type=bool, default=False, help='Train the model from scratch.')
     return parser.parse_args()
@@ -35,22 +34,10 @@ def main():
     pthpath = args.pthpath
     base_dir = args.base_dir
     decay = args.decay
-    milestones = args.milestones
-    gamma = args.gamma
+    step_size = args.step_size
     model_choice = args.model
     scratch = args.scratch
     optimizer= args.optimizer
-
-    if optimizer == "SGD":
-        if len(milestones) == 0:
-            milestones = [int(num_epochs * 0.5), int(num_epochs * 0.75)]
-        else:
-            milestones = [int(x) for x in "".join(milestones[1:-1]).split(',')]
-
-    if len(milestones) > 0:
-        for milestone in milestones:
-            if milestone > num_epochs:
-                raise ValueError("Milestone epoch cannot be greater than the total number of epochs.")
             
     train_loader, test_loader = get_loaders(batch_size=batch_size, data_dir=data_dir)
 
@@ -84,7 +71,7 @@ def main():
         raise ValueError("Model must be either 'vgg11' or 'vit'.")
 
     # 构造目录名称
-    directory_name = f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"
+    directory_name = f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{step_size}"
     
     # 设置 save_dir 和 logdir
     save_dir = os.path.join(base_dir, "modelpth", directory_name)
@@ -116,7 +103,7 @@ def main():
         # eps = 1e-8 if model_choice == 'vgg11' else 1e-5
         optimizer = torch.optim.AdamW(parameters, weight_decay=decay, eps=1e-8)
 
-    train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, model_choice, milestones, gamma)
+    train_model(model, train_loader, test_loader, criterion, optimizer, num_epochs, logdir, save_dir, step_size, model_choice)
 
 if __name__ == '__main__':
     main()
