@@ -150,7 +150,7 @@ https://drive.google.com/file/d/1KUVjIUjCiYd0HbsztkmMRJG1wZ0y7qqG/view?usp=shari
   ```
   python train.py --data_dir "path to CIFAR100" --base_dir "path to save log and pth" --trytime 4 --strategy s --num_epochs 10
   ```
-- 额外：如果想尝试参数列表中的其它参数，请按照如下形式，添加在`示例1-示例4`的代码中。
+- 额外：如果想尝试参数列表中的其它参数，请按照如下形式，添加在`示例1`-`示例4`的代码中。
   ```
   --batch_size 256
   ```
