@@ -246,7 +246,7 @@ wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=p
 
 浏览器打开链接以后，进行pth的下载。
 ```
-https://drive.google.com/file/d/1hoQ3OmsZ_wjpgozheug1yFJB09uAnb_B/view?usp=sharing 
+https://drive.google.com/file/d/1Nm3x8_QrHNVoYVY2B6gzHbGe7Bcl-w8p/view?usp=sharing
 ```
 
 ## Ⅱ. 训练
