@@ -240,14 +240,14 @@ cd 四个文件摆放的同级目录位置
 
 浏览器打开链接以后，进行pth的下载。
 ```
-
+https://drive.google.com/file/d/158AM9eq0hviv13OEkq41jov50RdESlqw/view?usp=sharing
 ```
 
 模型权重2: 在pre-trained的VGG-11基础上微调得到的结果。(Google Drive)
 
 浏览器打开链接以后，进行pth的下载。
 ```
-
+https://drive.google.com/file/d/1rgtjg6-939enlmTW56ZkFdzar5tp_Hs_/view?usp=sharing
 ```
 
 ## Ⅱ. 训练
