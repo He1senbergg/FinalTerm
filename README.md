@@ -213,8 +213,7 @@ cd 四个文件摆放的同级目录位置
 | `--optimizer` | str  | 'SGD'(**大小写敏感**)                     | Optimizer to use (SGD or Adam or AdamW).                   |
 | `--base_dir` | str   | (**必须指定**)                                     | Base directory for saving model and logs.          |
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
-| `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
-| `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
+| `--step_size` | list | []                                          | step size for the learning rate scheduler.      |
 | `--model`   | str    | 'vgg11'                                          | Model to train ("vgg11" or "vit").                     |
 | `--scratch` | bool   | False                                          | Train the model from scratch.                      |
 
@@ -232,21 +231,23 @@ cd 四个文件摆放的同级目录位置
 
 根目录需要自适应修改。代码实现了，会在base_dir/model/下，以各个当前运行的参数进行命名文件夹名a，随后会在base_dir/model/a/下进行pth的保存。同理会在base_dir/tensorboard/a/下进行log的保存。
 
-*注：其中文件夹名a为f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{milestones}_{gamma}"*
+*注：其中文件夹名a为f"{try_times}_{model_choice}_{optimizer}_{momentum}_{decay}_{learning_rate}_{num_epochs}_{batch_size}_{scratch}_{step_size}"*
 
 
 **4. 下载模型权重文件**
 
-模型权重1: 在pre-trained的ViT基础上微调得到的结果。(dropbox)
+模型权重1: 在pre-trained的ViT基础上微调得到的结果。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
-wget https://www.dropbox.com/scl/fi/n6nvljix73xyvpiih4b8i/183_0.9032.pth?rlkey=pjckvuv6kwg2clhuh10t60gvj&st=whxrahg8&dl=1
+
 ```
 
 模型权重2: 在pre-trained的VGG-11基础上微调得到的结果。(Google Drive)
 
 浏览器打开链接以后，进行pth的下载。
 ```
-https://drive.google.com/file/d/1Nm3x8_QrHNVoYVY2B6gzHbGe7Bcl-w8p/view?usp=sharing
+
 ```
 
 ## Ⅱ. 训练
