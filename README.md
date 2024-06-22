@@ -96,31 +96,43 @@ python data_process.py --data_dir /path/to/your/directory
 **5. 下载模型权重文件**
 
 模型权重1: 在ImageNet上pre-trained的ResNet-18只训练分类层得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 https://drive.google.com/file/d/1yoffo1ex-ccwM_DMeit6tK_AOGQinTeE/view?usp=sharing
 ```
 
 模型权重2: 在ImageNet上pre-trained的ResNet-18经过全局微调训练得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 https://drive.google.com/file/d/14LN02EpIHkkBkvlixGS7NKQF9UkDg7wE/view?usp=sharing
 ```
 
 模型权重3: 从零经过自监督学习（Tiny ImageNet）预训练得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 
 ```
 
 模型权重4: 从零经过自监督学习（Tiny ImageNet）预训练，再只训练分类层得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 
 ```
 
 模型权重5: 从零经过自监督学习（Tiny ImageNet）预训练，再经过全局微调训练得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 
 ```
 
 模型权重6：从零进行监督学习得到的模型。(Google Drive)
+
+浏览器打开链接以后，进行pth的下载。
 ```
 https://drive.google.com/file/d/1KUVjIUjCiYd0HbsztkmMRJG1wZ0y7qqG/view?usp=sharing 
 ```
