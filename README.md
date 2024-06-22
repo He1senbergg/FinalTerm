@@ -57,7 +57,7 @@ python data_process.py --data_dir /path/to/your/directory
 | `--optimizer` | str  | 'SGD'(**大小写敏感**)                     | Optimizer to use (SGD or Adam or AdamW).                   |
 | `--base_dir` | str   | (**必须指定**)                                     | Base directory for saving model and logs.          |
 | `--decay`   | float  | 1e-3                                           | Weight decay for the optimizer.                    |
-| `--milestones` | list | []                                          | List of epochs to decrease the learning rate.      |
+| `--milestones` | list | []                                          | List of epochs to decrease the learning rate. (Only for Supervised)     |
 | `--gamma`   | float  | 0.1                                            | Factor to decrease the learning rate.              |
 | `--strategy`   | str    | (**必须指定，全小写缩写**)                 | Strategy for training.  |
 
