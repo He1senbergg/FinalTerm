@@ -1,7 +1,3 @@
-# FinalTerm（2024/06/13 15: 30）
-待完善内容：
-- pth还需要补齐。
-
 # 仓库文件说明
 ## MISSION1 对比监督学习和自监督学习在图像分类任务上的性能表现
 一共四个代码文件。
@@ -113,21 +109,21 @@ https://drive.google.com/file/d/14LN02EpIHkkBkvlixGS7NKQF9UkDg7wE/view?usp=shari
 
 浏览器打开链接以后，进行pth的下载。
 ```
-
+https://drive.google.com/file/d/1CULinKLzEEl4ypP_-MjKmworNGgTebWs/view?usp=sharing
 ```
 
 模型权重4: 从零经过自监督学习（Tiny ImageNet）预训练，再只训练分类层得到的模型。(Google Drive)
 
 浏览器打开链接以后，进行pth的下载。
 ```
-
+https://drive.google.com/file/d/1gnkb4iZEAwzZ_gVfnW3dRH3fQO6_e_Av/view?usp=sharing
 ```
 
 模型权重5: 从零经过自监督学习（Tiny ImageNet）预训练，再经过全局微调训练得到的模型。(Google Drive)
 
 浏览器打开链接以后，进行pth的下载。
 ```
-
+https://drive.google.com/file/d/1bLBBv6pD-FNN6yQeexMi0EFvNFN2MtdN/view?usp=sharing
 ```
 
 模型权重6：从零进行监督学习得到的模型。(Google Drive)
